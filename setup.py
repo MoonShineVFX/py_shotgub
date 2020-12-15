@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://https://github.com/MoonShineVFX/py_shotgun",
-    packages=setuptools.find_packages(),
+    py_modules=['py_shotgun'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
