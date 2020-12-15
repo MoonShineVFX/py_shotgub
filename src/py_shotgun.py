@@ -118,7 +118,10 @@ class SG_Base(object):
             name_code = 'cached_display_name'
         else:
             name_code = 'name'
-        return self.__getattr__(name_code)
+        try:
+            return self.__getattr__(name_code)
+        except AttributeError as e:
+            raise RuntimeError(f'No support "name_" method for {self.type} type') from e
 
     def __str__(self):
         return '<Shotgun:%s(%s), name:%s>' % (self.type_, self.id_, self.name_())
