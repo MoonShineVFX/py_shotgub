@@ -1,1 +1,1 @@
-from src import py_shotgun
+import py_shotgun

@@ -4,7 +4,7 @@ import datetime
 import unittest
 
 from shotgun_api3 import Shotgun
-from tests import py_shotgun
+import py_shotgun
 
 url = r'https://{}.shotgunstudio.com'.format(os.environ['SHOTGUNSTUDIO'])
 script_name = os.environ['script_name']
