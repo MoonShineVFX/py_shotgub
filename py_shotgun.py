@@ -151,4 +151,4 @@ class SG_Base(object):
             return False
 
     def __hash__(self):
-        return hash(self.type + str(self.id_))
+        return hash(self.type_ + str(self.id_))
