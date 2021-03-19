@@ -1,4 +1,7 @@
 # config:utf8
+import os
+from shotgun_api3 import Shotgun
+
 
 class SGSchema(object):
     api = None
@@ -11,11 +14,20 @@ class SGSchema(object):
         if cls.api:
             return
         cls.api = api
-        cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
+        try:
+            cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
+        except Exception as e:
+            api = url = r'https://{}.shotgunstudio.com'.format(os.environ['SHOTGUNSTUDIO'])
+            script_name = os.environ['PYSHOTGUN_NAME']
+            api_key = os.environ['PYSHOTGUN_KEY']
+            cls.api = Shotgun(url, script_name=script_name, api_key=api_key)
+            
+            cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
+
         cls.DEFAULT_RETURN.update({
             '_': [],
             'Asset': ['id', 'code', 'sg_asset_type', 'sg_status_list'],
-            'Note': ['id', 'addressings_to', 'user', 'tasks','note_links'],
+            'Note': ['id', 'addressings_to', 'user', 'tasks', 'note_links'],
             'Project': ['id', 'name', 'sg_pm', 'sg_type'],
             'Reply': ['id', 'content', 'entity', 'user'],
             'Shot': ['id', 'code', 'sg_shot_type', 'sg_status_list'],
@@ -94,7 +106,8 @@ class SG_Base(object):
         if not enty_val:
             return enty_val
         if type(enty_val) is list:
-            self._attrs[attr_] = [self._sg2obj(enty['type'], enty['id']) for enty in enty_val]
+            self._attrs[attr_] = [self._sg2obj(
+                enty['type'], enty['id']) for enty in enty_val]
         elif type(enty_val) is dict:
             self._attrs[attr_] = self._sg2obj(enty_val['type'], enty_val['id'])
         else:
@@ -110,7 +123,7 @@ class SG_Base(object):
 
     def name_(self):
         name_code = ''
-        if self.type_ in ('Asset', 'Shot', 'Version'):
+        if self.type_ in ('Asset', 'Shot', 'Version', 'Group'):
             name_code = 'code'
         elif self.type_ in ('Task',):
             name_code = 'content'
@@ -121,7 +134,8 @@ class SG_Base(object):
         try:
             return self.__getattr__(name_code)
         except AttributeError as e:
-            raise RuntimeError(f'No support "name_" method for {self.type} type') from e
+            raise RuntimeError(
+                f'No support "name_" method for {self.type} type') from e
 
     def __str__(self):
         return '<Shotgun:%s(%s), name:%s>' % (self.type_, self.id_, self.name_())
@@ -129,8 +143,12 @@ class SG_Base(object):
     def __eq__(self, obj):
         if not isinstance(obj, SG_Base):
             raise ValueError('except %s, get "%s"' % (type(self), type(obj)))
-        if self.type_ != obj.type_: raise ValueError('except %s, get "%s"' % (self.type_, obj.type_))
+        if self.type_ != obj.type_:
+            raise ValueError('except %s, get "%s"' % (self.type_, obj.type_))
         if self.id_ == obj.id_:
             return True
         else:
             return False
+
+    def __hash__(self):
+        return hash(self.type + str(self.id_))
