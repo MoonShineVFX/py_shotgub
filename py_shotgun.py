@@ -123,7 +123,7 @@ class SG_Base(object):
 
     def name_(self):
         name_code = ''
-        if self.type_ in ('Asset', 'Shot', 'Version', 'Group'):
+        if self.type_ in ('Asset', 'Shot', 'Version', 'Group', 'Step'):
             name_code = 'code'
         elif self.type_ in ('Task',):
             name_code = 'content'
