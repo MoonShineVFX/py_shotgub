@@ -20,7 +20,7 @@ class SGSchema(object):
         #     script_name = os.environ['PYSHOTGUN_NAME']
         #     api_key = os.environ['PYSHOTGUN_KEY']
         #     cls.api = Shotgun(url, script_name=script_name, api_key=api_key)
-            
+
         #     cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
 
         cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
@@ -65,9 +65,13 @@ class SG_Classes(object):
 class SG_Base(object):
     type_ = '_'
 
-    def __init__(self, id_, api, logger):
+    def __init__(self, id_, api=None, logger=None):
         self.id_ = id_
         self.api = api
+        if self.api is None:
+            self.api = SGSchema.api
+        if self.api is None:
+            raise RuntimeError('use set_api first')
         self.logger = logger
         self.return_list = SGSchema.DEFAULT_RETURN[self.type_]
         self._attrs = dict()

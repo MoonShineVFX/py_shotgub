@@ -64,3 +64,12 @@ class TestSgschema(unittest.TestCase):
         ast = Asset(self.asset1['id'], sg, self.logger)
         print(ast.name_())
 
+    def test_name_attribute_without_sg(self):
+        SGSchema = py_shotgun.SGSchema
+        SGSchema.set_api(sg)
+        Asset = SGSchema.sgClasses.Asset
+        Version = SGSchema.sgClasses.Version
+        ver = Version(self.event_log1['entity']['id'])
+        print(ver.name_())
+        ast = Asset(self.asset1['id'], sg, self.logger)
+        print(ast.name_())
