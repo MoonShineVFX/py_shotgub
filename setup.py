@@ -5,14 +5,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="py_shotgun",
-    version="0.0.6",
+    version="0.0.7",
     author="Noflame Lin",
     author_email="linjuang@gmail.com",
     description="simple shotgun api wrap",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://https://github.com/MoonShineVFX/py_shotgun",
-    install_requires=['shotgun-api3'],
+    install_requires=[],
     py_modules=['py_shotgun'],
     classifiers=[
         "Programming Language :: Python :: 3",

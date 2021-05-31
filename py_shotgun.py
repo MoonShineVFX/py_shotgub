@@ -1,6 +1,5 @@
 # config:utf8
 import os
-from shotgun_api3 import Shotgun
 
 
 class SGSchema(object):
@@ -14,16 +13,17 @@ class SGSchema(object):
         if cls.api:
             return
         cls.api = api
-        try:
-            cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
-        except Exception as e:
-            api = url = r'https://{}.shotgunstudio.com'.format(os.environ['SHOTGUNSTUDIO'])
-            script_name = os.environ['PYSHOTGUN_NAME']
-            api_key = os.environ['PYSHOTGUN_KEY']
-            cls.api = Shotgun(url, script_name=script_name, api_key=api_key)
+        # try:
+        #     cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
+        # except Exception as e:
+        #     api = url = r'https://{}.shotgunstudio.com'.format(os.environ['SHOTGUNSTUDIO'])
+        #     script_name = os.environ['PYSHOTGUN_NAME']
+        #     api_key = os.environ['PYSHOTGUN_KEY']
+        #     cls.api = Shotgun(url, script_name=script_name, api_key=api_key)
             
-            cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
+        #     cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
 
+        cls.DEFAULT_RETURN = {key: list() for key in cls._entities()}
         cls.DEFAULT_RETURN.update({
             '_': [],
             'Asset': ['id', 'code', 'sg_asset_type', 'sg_status_list'],
