@@ -85,6 +85,8 @@ class SG_Base(object):
             self.type_,
             [['id', 'is', self.id_]],
             self.return_list)
+        if not sg_data:
+            raise RuntimeError(f'Can Not Find {self.type_}({self.id_})')
         self._sg_attrs.update(sg_data)
 
     def _schema(self):
