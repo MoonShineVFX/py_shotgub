@@ -2,6 +2,10 @@
 import os
 
 
+class PyShotgunError(Exception):
+    pass
+
+
 class SGSchema(object):
     api = None
     sgClasses = None
@@ -71,7 +75,7 @@ class SG_Base(object):
         if self.api is None:
             self.api = SGSchema.api
         if self.api is None:
-            raise RuntimeError('use set_api first')
+            raise PyShotgunError('use set_api first')
         self.logger = logger
         self.return_list = SGSchema.DEFAULT_RETURN[self.type_]
         self._attrs = dict()
@@ -86,7 +90,7 @@ class SG_Base(object):
             [['id', 'is', self.id_]],
             self.return_list)
         if not sg_data:
-            raise RuntimeError(f'Can Not Find {self.type_}({self.id_})')
+            raise PyShotgunError(f'Can Not Find {self.type_}({self.id_})')
         self._sg_attrs.update(sg_data)
 
     def _schema(self):
@@ -101,7 +105,7 @@ class SG_Base(object):
             self._find_attrs()
             return self._attr_get_(attr_)
         else:
-            raise AttributeError(
+            raise PyShotgunError(
                 'shotgun entity type:%s, has no attribute:%s\nvalid value are %s' % (self.type_, attr_, self._schema_dict.keys()))
 
     def _attr_get_(self, attr_):
@@ -140,7 +144,7 @@ class SG_Base(object):
         try:
             return self.__getattr__(name_code)
         except AttributeError as e:
-            raise RuntimeError(
+            raise PyShotgunError(
                 f'No support "name_" method for {self.type} type') from e
 
     def __str__(self):
