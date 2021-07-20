@@ -98,7 +98,7 @@ class SG_Base(object):
         except TypeError as e:
             msg = {'error_msg':str(e),
                    'sg_data':sg_data,
-                   'self._sg_attrs': self._sg_attrs}
+                   'self': pprint.pformat(self)}
             msg_str = pprint.pformat(msg, indent=4)
             self.logger.error(msg_str)
             raise PyShotgunError(msg) from e
