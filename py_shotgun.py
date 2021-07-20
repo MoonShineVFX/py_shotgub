@@ -1,6 +1,8 @@
 # config:utf8
 import os
-
+import pprint
+import logging
+_logger = logging.getLogger(__file__)
 
 class PyShotgunError(Exception):
     pass
@@ -76,7 +78,7 @@ class SG_Base(object):
             self.api = SGSchema.api
         if self.api is None:
             raise PyShotgunError('use set_api first')
-        self.logger = logger
+        self.logger = logger if logger else _logger
         self.return_list = SGSchema.DEFAULT_RETURN[self.type_]
         self._attrs = dict()
         self._sg_attrs = dict()
@@ -91,7 +93,15 @@ class SG_Base(object):
             self.return_list)
         if not sg_data:
             raise PyShotgunError(f'Can Not Find {self.type_}({self.id_})')
-        self._sg_attrs.update(sg_data)
+        try:
+            self._sg_attrs.update(sg_data)
+        except TypeError as e:
+            msg = {'error_msg':str(e),
+                   'sg_data':sg_data,
+                   'self._sg_attrs': self._sg_attrs}
+            msg_str = pprint.pformat(msg, indent=4)
+            self.logger.error(msg_str)
+            raise PyShotgunError(msg) from e
 
     def _schema(self):
         if not self._schema_dict:

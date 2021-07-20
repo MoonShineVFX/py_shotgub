@@ -73,3 +73,10 @@ class TestSgschema(unittest.TestCase):
         print(ver.name_())
         ast = Asset(self.asset1['id'], sg, self.logger)
         print(ast.name_())
+
+    def test_query_delete_entity(self):
+        SGSchema = py_shotgun.SGSchema
+        SGSchema.set_api(sg)
+        Task = SGSchema.sgClasses.Task
+        task = Task(66099, sg, self.logger)
+        print(task.name_())
